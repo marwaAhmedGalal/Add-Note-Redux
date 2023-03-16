@@ -1,24 +1,40 @@
-import'./style.css'
-import { useState } from 'react';
-import { useDispatch } from 'react-redux'
-import { getNoteValue } from './store/actions';
+import "./style.css";
+import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  initSaveNotesValue,
+  initSaveNotesValueSuccessfull,
+} from "./store/actions";
+import { useNavigate } from "react-router-dom";
 
 const AddNewNote = () => {
   const [notesName, setNotesName] = useState("");
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
+  const { success } = useSelector((state) => state.AddNotesReducer);
+  console.log(success);
+
+  useEffect(() => {
+    //resetting the form value
+    //navigate to list page
+    //reset success action as false again
+    if (success) {
+      setNotesName("");
+      navigate("/");
+      dispatch(initSaveNotesValueSuccessfull(false));
+    }
+  }, [success]);
 
   const handleOnChange = (event) => {
-    const {value} = event.target;
-    setNotesName(value)
+    const { value } = event.target;
+    setNotesName(value);
   };
 
-
   //usedispatch method
-  const handleClick = () =>{
-    dispatch( getNoteValue()) 
-  }
-
+  const handleClick = () => {
+    dispatch(initSaveNotesValue(notesName));
+  };
 
   return (
     <div className="add-new-note-wrapper">
@@ -28,8 +44,11 @@ const AddNewNote = () => {
           name="addTodo"
           placeholder="Enter Todo Name"
           onChange={handleOnChange}
+          value={notesName}
         />
-        <button onClick={handleClick}>Add Todo</button>
+        <button disabled={notesName.trim() === ""} onClick={handleClick}>
+          Add Todo
+        </button>
       </div>
     </div>
   );

@@ -8,6 +8,7 @@ margin: 0px;
     gap:15px;
     list-style: none;
     justify-content:center;
+    flex-wrap: wrap;
 }
 
 .notes-list-wrapper ul li{
